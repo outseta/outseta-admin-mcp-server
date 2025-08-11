@@ -75,12 +75,22 @@ class OutsetaApi {
     });
   }
 
+  async getPlanFamilies(): Promise<any> {
+    const response = await this.axiosInstance.get("/billing/planfamilies");
+    return response.data;
+  }
+
   async getPlans(params: QueryParams): Promise<PaginatedResults> {
     const response = await this.axiosInstance.get("/billing/plans", {
       params,
     });
 
     return response.data as PaginatedResults;
+  }
+
+  async createPlan(params: any): Promise<any> {
+    const response = await this.axiosInstance.post("/billing/plans", params);
+    return response.data;
   }
 
   async getAccounts(params: QueryParams): Promise<PaginatedResults> {
