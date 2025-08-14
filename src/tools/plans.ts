@@ -11,29 +11,36 @@ import {
 import { createSuccessResponse, createErrorResponse } from "./_utils.js";
 import type OutsetaApi from "../api.js";
 
-const oneTimeRateSchema = z.object({
-  oneTimeRate: z
-    .number()
-    .optional()
-    .default(0)
-    .describe("The one-time fee for the plan"),
-});
-const recurringRateSchema = z.object({
-  monthlyRate: z
-    .number()
-    .optional()
-    .default(0)
-    .describe("The monthly rate for the plan"),
-  quarterlyRate: z
-    .number()
-    .optional()
-    .default(0)
-    .describe("The quarterly rate for the plan"),
-  yearlyRate: z
-    .number()
-    .optional()
-    .default(0)
-    .describe("The yearly rate for the plan"),
+const createPlanSchema = z.object({
+  accountRegistrationMode: z.enum(["Individual", "Team"]).default("Individual"),
+  isActive: z.boolean().describe("Whether the plan is active"),
+  name: z.string().describe("The name of the plan"),
+  planFamilyUid: z.string().describe("The UID of the plan family"),
+  trialPeriodDays: z.number().describe("Number of trial period days"),
+  rates: z
+    .union([
+      z.object({
+        monthlyRate: z
+          .number()
+          .optional()
+          .describe("The monthly rate for the plan"),
+        quarterlyRate: z
+          .number()
+          .optional()
+          .describe("The quarterly rate for the plan"),
+        yearlyRate: z
+          .number()
+          .optional()
+          .describe("The yearly rate for the plan"),
+      }),
+      z.object({
+        oneTimeRate: z
+          .number()
+          .optional()
+          .describe("The one-time fee for the plan"),
+      }),
+    ])
+    .describe("The rates for the plan"),
 });
 
 export const registerPlansTools = (
@@ -67,35 +74,36 @@ export const registerPlansTools = (
   });
   server.tool(
     "create_plan",
-    "Create a new billing plan",
+    "Create a new billing plan in Outseta",
     {
-      accountRegistrationMode: z
-        .enum(["Individual", "Team"])
-        .default("Individual")
-        .transform((val) => (val === "Individual" ? 1 : 2))
-        .describe(
-          "Account registration mode: Individual = one account per person (no account info requested), Team = one account per group (account info requested during registration)"
-        ),
-      isActive: z.boolean().describe("Whether the plan is active"),
-      name: z.string().describe("The name of the plan"),
-      planFamilyUid: z.string().describe("The UID of the plan family"),
-      rates: z
-        .union([oneTimeRateSchema, recurringRateSchema])
-        .describe("The rates for the plan"),
-      trialPeriodDays: z.number().describe("Number of trial period days"),
+      ...createPlanSchema.shape,
     },
-    async (params: any) => {
-      // Transform the parameters to match the expected API format
+    async (params: z.infer<typeof createPlanSchema>) => {
+      const MonthlyRate =
+        "monthlyRate" in params.rates ? params.rates.monthlyRate : undefined;
+      const QuarterlyRate =
+        "quarterlyRate" in params.rates
+          ? params.rates.quarterlyRate
+          : undefined;
+      const YearlyRate =
+        "yearlyRate" in params.rates && params.rates.yearlyRate
+          ? params.rates.yearlyRate
+          : undefined;
+      const OneTimeRate =
+        "oneTimeRate" in params.rates && params.rates.oneTimeRate
+          ? params.rates.oneTimeRate
+          : undefined;
+
       const transformedParams = {
         AccountRegistrationMode: params.accountRegistrationMode,
         IsActive: params.isActive,
         Name: params.name,
         PlanFamily: { Uid: params.planFamilyUid },
-        MonthlyRate: params.rates.monthlyRate,
-        QuarterlyRate: params.rates.quarterlyRate,
-        YearlyRate: params.rates.yearlyRate,
-        OneTimeRate: params.rates.oneTimeRate,
         TrialPeriodDays: params.trialPeriodDays,
+        MonthlyRate,
+        QuarterlyRate,
+        YearlyRate,
+        OneTimeRate,
       };
 
       try {
