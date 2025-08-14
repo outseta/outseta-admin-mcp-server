@@ -1,20 +1,26 @@
-import { PaginatedResults } from "../schemas/common.js";
+import { type CallToolResult } from "@modelcontextprotocol/sdk/types.js";
+import { AxiosResponse } from "axios";
 
-export const createSuccessResponse = (structuredContent: PaginatedResults) => {
+export const createSuccessResponse = (
+  response: AxiosResponse<any>
+): CallToolResult => {
   return {
     structuredContent: {
-      ...structuredContent,
+      ...response.data,
     },
     content: [
       {
         type: "text" as const,
-        text: JSON.stringify(structuredContent, null, 2),
+        text: JSON.stringify(response.data, null, 2),
       },
     ],
   };
 };
 
-export const createErrorResponse = (error: unknown, operation: string) => {
+export const createErrorResponse = (
+  error: unknown,
+  operation: string
+): CallToolResult => {
   const errorMessage = error instanceof Error ? error.message : String(error);
   return {
     structuredContent: {

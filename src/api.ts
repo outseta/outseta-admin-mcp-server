@@ -1,4 +1,4 @@
-import axios, { AxiosInstance } from "axios";
+import axios, { AxiosInstance, AxiosResponse } from "axios";
 import {
   FilterParam,
   PaginatedResults,
@@ -15,21 +15,6 @@ class OutsetaApi {
         Authorization: `Outseta ${apiKey}:${apiSecret}`,
         "Content-Type": "application/json",
       },
-      transformResponse: [
-        (data) => {
-          if (data.metadata) {
-            return {
-              ...data,
-              metadata: {
-                total: data.metadata.total,
-                page: data.metadata.offset,
-                perPage: data.metadata.limit,
-              },
-            };
-          }
-          return data;
-        },
-      ],
     });
 
     // Add request interceptor to transform params
@@ -73,32 +58,49 @@ class OutsetaApi {
       }
       return config;
     });
+
+    // Add response interceptor to transform metadata
+    this.axiosInstance.interceptors.response.use((response) => {
+      if (
+        response.data &&
+        typeof response.data === "object" &&
+        response.data.metadata
+      ) {
+        response.data = {
+          ...response.data,
+          metadata: {
+            total: response.data.metadata.total,
+            page: response.data.metadata.offset,
+            perPage: response.data.metadata.limit,
+          },
+        };
+      }
+      return response;
+    });
   }
 
-  async getPlanFamilies(): Promise<any> {
-    const response = await this.axiosInstance.get("/billing/planfamilies");
-    return response.data;
+  async getPlanFamilies(): Promise<AxiosResponse<any>> {
+    return await this.axiosInstance.get("/billing/planfamilies");
   }
 
-  async getPlans(params: QueryParams): Promise<PaginatedResults> {
-    const response = await this.axiosInstance.get("/billing/plans", {
+  async getPlans(
+    params: QueryParams
+  ): Promise<AxiosResponse<PaginatedResults>> {
+    return await this.axiosInstance.get("/billing/plans", {
       params,
     });
-
-    return response.data as PaginatedResults;
   }
 
-  async createPlan(params: any): Promise<any> {
-    const response = await this.axiosInstance.post("/billing/plans", params);
-    return response.data;
+  async createPlan(params: any): Promise<AxiosResponse<any>> {
+    return await this.axiosInstance.post("/billing/plans", params);
   }
 
-  async getAccounts(params: QueryParams): Promise<PaginatedResults> {
-    const response = await this.axiosInstance.get("/crm/accounts", {
+  async getAccounts(
+    params: QueryParams
+  ): Promise<AxiosResponse<PaginatedResults>> {
+    return await this.axiosInstance.get("/crm/accounts", {
       params,
     });
-
-    return response.data as PaginatedResults;
   }
 }
 
