@@ -2,8 +2,7 @@
 
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
-import { registerAllTools } from "./tools/index.js";
-import OutsetaApi from "./api/index.js";
+import { registerTools } from "./tools.js";
 
 // Create server instance
 const server = new McpServer({
@@ -11,14 +10,7 @@ const server = new McpServer({
   version: "1.0.0",
 });
 
-const outsetaApi = new OutsetaApi(
-  process.env.OUTSETA_SUBDOMAIN!,
-  process.env.OUTSETA_API_KEY!,
-  process.env.OUTSETA_API_SECRET!
-);
-
-// Register all tools
-registerAllTools(server, outsetaApi);
+registerTools(server);
 
 // Start the server
 async function main() {
