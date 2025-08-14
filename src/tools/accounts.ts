@@ -1,14 +1,11 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import OutsetaApi, { queryParamsSchema, QueryParams } from "../api/index.js";
 import {
-  paginationSchema,
-  filtersSchema,
-  orderBySchema,
+  createSuccessResponse,
+  createErrorResponse,
   PAGINATION_DESCRIPTION,
   FILTERING_DESCRIPTION,
-  QueryParams,
-} from "../schemas/common.js";
-import { createSuccessResponse, createErrorResponse } from "./_utils.js";
-import type OutsetaApi from "../api.js";
+} from "./_utils.js";
 
 export const registerAccountsTools = (
   server: McpServer,
@@ -17,11 +14,7 @@ export const registerAccountsTools = (
   server.tool(
     "get_accounts",
     `Get accounts from Outseta. ${PAGINATION_DESCRIPTION} ${FILTERING_DESCRIPTION}`,
-    {
-      ...paginationSchema.shape,
-      ...orderBySchema.shape,
-      filters: filtersSchema,
-    },
+    queryParamsSchema.shape,
     async (params: QueryParams) => {
       try {
         const response = await outsetaApi.getAccounts(params);

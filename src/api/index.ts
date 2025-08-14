@@ -1,9 +1,18 @@
 import axios, { AxiosInstance, AxiosResponse } from "axios";
 import {
-  FilterParam,
-  PaginatedResults,
-  QueryParams,
-} from "./schemas/common.js";
+  filterSchema,
+  paginatedMatadataSchema,
+  queryParamsSchema,
+} from "./schema.js";
+import { z } from "zod";
+
+export { queryParamsSchema, paginatedMatadataSchema };
+
+export type QueryParams = z.infer<typeof queryParamsSchema>;
+export type PaginatedResults<T> = {
+  metadata: z.infer<typeof paginatedMatadataSchema>;
+  items: Array<T>;
+};
 
 class OutsetaApi {
   private axiosInstance: AxiosInstance;
@@ -40,7 +49,10 @@ class OutsetaApi {
           }),
           // Transform filters if they exist
           ...filters.reduce(
-            (acc: Record<string, string>, filter: FilterParam) => {
+            (
+              acc: Record<string, string>,
+              filter: z.infer<typeof filterSchema>
+            ) => {
               const { field, operator, value } = filter;
               const paramKey = operator ? `${field}__${operator}` : field;
               acc[paramKey] = value?.toString();
@@ -79,13 +91,17 @@ class OutsetaApi {
     });
   }
 
-  async getPlanFamilies(): Promise<AxiosResponse<any>> {
-    return await this.axiosInstance.get("/billing/planfamilies");
+  async getPlanFamilies(
+    params: QueryParams
+  ): Promise<AxiosResponse<PaginatedResults<any>>> {
+    return await this.axiosInstance.get("/billing/planfamilies", {
+      params,
+    });
   }
 
   async getPlans(
     params: QueryParams
-  ): Promise<AxiosResponse<PaginatedResults>> {
+  ): Promise<AxiosResponse<PaginatedResults<any>>> {
     return await this.axiosInstance.get("/billing/plans", {
       params,
     });
@@ -97,7 +113,7 @@ class OutsetaApi {
 
   async getAccounts(
     params: QueryParams
-  ): Promise<AxiosResponse<PaginatedResults>> {
+  ): Promise<AxiosResponse<PaginatedResults<any>>> {
     return await this.axiosInstance.get("/crm/accounts", {
       params,
     });

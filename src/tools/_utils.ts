@@ -1,6 +1,12 @@
 import { type CallToolResult } from "@modelcontextprotocol/sdk/types.js";
 import { AxiosResponse } from "axios";
 
+export const PAGINATION_DESCRIPTION =
+  "Use page and perPage for pagination - check the 'total' in metadata to see if more results are available. Set page to skip pages (e.g., page=1 for the second page keeping perPage the same for all pages).";
+
+export const FILTERING_DESCRIPTION =
+  "Use filters for filtering data. Each filter should specify a field, optional operator (__gt, __gte, __lt, __lte, __ne, __isnull), and value. For basic filtering without operators, just specify field and value.";
+
 export const createSuccessResponse = (
   response: AxiosResponse<any>
 ): CallToolResult => {

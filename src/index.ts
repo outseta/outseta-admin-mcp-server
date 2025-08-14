@@ -3,7 +3,7 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { registerAllTools } from "./tools/index.js";
-import OutsetaApi from "./api.js";
+import OutsetaApi from "./api/index.js";
 
 // Create server instance
 const server = new McpServer({

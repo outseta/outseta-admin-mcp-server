@@ -1,15 +1,13 @@
 import { z } from "zod";
 import { type McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import OutsetaApi, { queryParamsSchema, QueryParams } from "../api/index.js";
+
 import {
-  paginationSchema,
-  filtersSchema,
-  orderBySchema,
+  createSuccessResponse,
+  createErrorResponse,
   PAGINATION_DESCRIPTION,
   FILTERING_DESCRIPTION,
-  QueryParams,
-} from "../schemas/common.js";
-import { createSuccessResponse, createErrorResponse } from "./_utils.js";
-import type OutsetaApi from "../api.js";
+} from "./_utils.js";
 
 const createPlanSchema = z.object({
   accountRegistrationMode: z.enum(["Individual", "Team"]).default("Individual"),
@@ -50,11 +48,7 @@ export const registerPlansTools = (
   server.tool(
     "get_plans",
     `Get billing plans from Outseta. ${PAGINATION_DESCRIPTION} ${FILTERING_DESCRIPTION}`,
-    {
-      ...paginationSchema.shape,
-      ...orderBySchema.shape,
-      filters: filtersSchema,
-    },
+    queryParamsSchema.shape,
     async (params: QueryParams) => {
       try {
         const response = await outsetaApi.getPlans(params);
@@ -64,20 +58,23 @@ export const registerPlansTools = (
       }
     }
   );
-  server.tool("get_plan_families", "Get all plan families", {}, async () => {
-    try {
-      const response = await outsetaApi.getPlanFamilies();
-      return createSuccessResponse(response);
-    } catch (error: any) {
-      return createErrorResponse(error, "retrieving plan families");
+  server.tool(
+    "get_plan_families",
+    "Get all plan families",
+    queryParamsSchema.shape,
+    async (params: QueryParams) => {
+      try {
+        const response = await outsetaApi.getPlanFamilies(params);
+        return createSuccessResponse(response);
+      } catch (error: any) {
+        return createErrorResponse(error, "retrieving plan families");
+      }
     }
-  });
+  );
   server.tool(
     "create_plan",
     "Create a new billing plan in Outseta",
-    {
-      ...createPlanSchema.shape,
-    },
+    createPlanSchema.shape,
     async (params: z.infer<typeof createPlanSchema>) => {
       const MonthlyRate =
         "monthlyRate" in params.rates ? params.rates.monthlyRate : undefined;
