@@ -36,3 +36,17 @@ export const createPlanSchema = z.object({
     .default({})
     .describe("The rates for the plan"),
 });
+
+export const createPlanFamilySchema = z.object({
+  name: z.string().describe("The name of the plan family"),
+  isDefault: z
+    .boolean()
+    .optional()
+    .default(false)
+    .describe("Whether the plan family is the default"),
+  isActive: z
+    .boolean()
+    .optional()
+    .default(true)
+    .describe("Whether the plan family is active"),
+});

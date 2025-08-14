@@ -50,6 +50,19 @@ export const registerTools = (server: McpServer) => {
       return toolResponse(billingPlans.createPlan, params, "create_plan");
     }
   );
+
+  server.tool(
+    "create_plan_family",
+    "Create a plan family in Outseta",
+    billingPlans.createPlanFamilySchema.shape,
+    async (params: billingPlans.CreatePlanFamilyParams) => {
+      return toolResponse(
+        billingPlans.createPlanFamily,
+        params,
+        "create_plan_family"
+      );
+    }
+  );
 };
 
 const toolResponse = async (

@@ -1,6 +1,10 @@
 import { z } from "zod";
 import outseta, { PaginatedResults, QueryParams } from "../api/index.js";
-import { createPlanSchema } from "./schema.js";
+import { createPlanSchema, createPlanFamilySchema } from "./schema.js";
+
+export { createPlanSchema, createPlanFamilySchema };
+export type CreatePlanParams = z.infer<typeof createPlanSchema>;
+export type CreatePlanFamilyParams = z.infer<typeof createPlanFamilySchema>;
 
 export const getPlans = async (params: QueryParams) => {
   return await outseta.get<PaginatedResults<any>>("/billing/plans", {
@@ -13,9 +17,6 @@ export const getPlanFamilies = async (params: QueryParams) => {
     params,
   });
 };
-
-export { createPlanSchema };
-export type CreatePlanParams = z.infer<typeof createPlanSchema>;
 
 export const createPlan = async (params: CreatePlanParams) => {
   const MonthlyRate =
@@ -43,4 +44,13 @@ export const createPlan = async (params: CreatePlanParams) => {
     OneTimeRate,
   };
   return await outseta.post("/billing/plans", outsetaParams);
+};
+
+export const createPlanFamily = async (params: CreatePlanFamilyParams) => {
+  const outsetaParams = {
+    Name: params.name,
+    IsDefault: params.isDefault,
+    IsActive: params.isActive,
+  };
+  return await outseta.post("/billing/planfamilies", outsetaParams);
 };
