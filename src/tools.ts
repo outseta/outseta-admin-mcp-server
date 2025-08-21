@@ -5,6 +5,9 @@ import * as crmAccounts from "./crm_accounts/index.js";
 import * as billingPlans from "./billing_plans/index.js";
 import * as billingSubscriptions from "./billing_subscriptions/index.js";
 
+export const CONFIRMATION_DESCRIPTION =
+  "Make sure to ask for confirmation before running this tool.";
+
 export const PAGINATION_DESCRIPTION =
   "Use page and perPage for pagination - check the 'total' in metadata to see if more results are available. Set page to skip pages (e.g., page=1 for the second page keeping perPage the same for all pages).";
 
@@ -45,7 +48,7 @@ export const registerTools = (server: McpServer) => {
 
   server.tool(
     "create_plan",
-    `Create a plan in Outseta.`,
+    `Create a plan in Outseta. ${CONFIRMATION_DESCRIPTION}`,
     billingPlans.createPlanSchema.shape,
     async (params: billingPlans.CreatePlanParams) => {
       return toolResponse(billingPlans.createPlan, params, "create_plan");
@@ -54,7 +57,7 @@ export const registerTools = (server: McpServer) => {
 
   server.tool(
     "create_plan_family",
-    `Create a plan family in Outseta.`,
+    `Create a plan family in Outseta. ${CONFIRMATION_DESCRIPTION}`,
     billingPlans.createPlanFamilySchema.shape,
     async (params: billingPlans.CreatePlanFamilyParams) => {
       return toolResponse(
@@ -80,7 +83,7 @@ export const registerTools = (server: McpServer) => {
 
   server.tool(
     "change_subscription",
-    `Change the subscription plan for an account in Outseta.`,
+    `Change the subscription plan for an account in Outseta. Make sure to preview the change. ${CONFIRMATION_DESCRIPTION}`,
     billingSubscriptions.subscriptionChangeSchema.shape,
     async (params: billingSubscriptions.SubscriptionChangeParams) => {
       return toolResponse(
