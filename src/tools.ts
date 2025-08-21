@@ -3,6 +3,7 @@ import { queryParamsSchema } from "./api/index.js";
 import { QueryParams } from "./api/index.js";
 import * as crmAccounts from "./crm_accounts/index.js";
 import * as billingPlans from "./billing_plans/index.js";
+import * as billingSubscriptions from "./billing_subscriptions/index.js";
 
 export const PAGINATION_DESCRIPTION =
   "Use page and perPage for pagination - check the 'total' in metadata to see if more results are available. Set page to skip pages (e.g., page=1 for the second page keeping perPage the same for all pages).";
@@ -44,7 +45,7 @@ export const registerTools = (server: McpServer) => {
 
   server.tool(
     "create_plan",
-    "Create a plan in Outseta",
+    `Create a plan in Outseta.`,
     billingPlans.createPlanSchema.shape,
     async (params: billingPlans.CreatePlanParams) => {
       return toolResponse(billingPlans.createPlan, params, "create_plan");
@@ -53,13 +54,39 @@ export const registerTools = (server: McpServer) => {
 
   server.tool(
     "create_plan_family",
-    "Create a plan family in Outseta",
+    `Create a plan family in Outseta.`,
     billingPlans.createPlanFamilySchema.shape,
     async (params: billingPlans.CreatePlanFamilyParams) => {
       return toolResponse(
         billingPlans.createPlanFamily,
         params,
         "create_plan_family"
+      );
+    }
+  );
+
+  server.tool(
+    "preview_subscription_change",
+    `Preview the subscription plan change for an account in Outseta without making actual changes.`,
+    billingSubscriptions.subscriptionChangeSchema.shape,
+    async (params: billingSubscriptions.SubscriptionChangeParams) => {
+      return toolResponse(
+        billingSubscriptions.previewSubscriptionChange,
+        params,
+        "preview_subscription_change"
+      );
+    }
+  );
+
+  server.tool(
+    "change_subscription",
+    `Change the subscription plan for an account in Outseta.`,
+    billingSubscriptions.subscriptionChangeSchema.shape,
+    async (params: billingSubscriptions.SubscriptionChangeParams) => {
+      return toolResponse(
+        billingSubscriptions.changeSubscription,
+        params,
+        "change_subscription"
       );
     }
   );
