@@ -5,6 +5,7 @@ import * as crmAccounts from "./crm_accounts/index.js";
 import * as crmPeople from "./crm_people/index.js";
 import * as billingPlans from "./billing_plans/index.js";
 import * as billingSubscriptions from "./billing_subscriptions/index.js";
+import * as emailLists from "./email_lists/index.js";
 
 export const CONFIRMATION_DESCRIPTION =
   "Make sure to ask for confirmation before running this tool.";
@@ -136,6 +137,28 @@ export const registerTools = (server: McpServer) => {
         billingSubscriptions.changeSubscription,
         params,
         "change_subscription"
+      );
+    }
+  );
+
+  server.tool(
+    "get_email_lists",
+    `Get email lists from Outseta. ${PAGINATION_DESCRIPTION} ${FILTERING_DESCRIPTION}`,
+    queryParamsSchema.shape,
+    async (params: QueryParams) => {
+      return toolResponse(emailLists.getEmailLists, params, "get_email_lists");
+    }
+  );
+
+  server.tool(
+    "create_email_list",
+    `Create an email list in Outseta. Welcome email configuration and requiresDoubleOptIn are only allowed when isInternal is false. ${CONFIRMATION_DESCRIPTION}`,
+    emailLists.createEmailListSchema.shape,
+    async (params: emailLists.CreateEmailListParams) => {
+      return toolResponse(
+        emailLists.createEmailList,
+        params,
+        "create_email_list"
       );
     }
   );
