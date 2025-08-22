@@ -2,6 +2,7 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { queryParamsSchema } from "./api/index.js";
 import { QueryParams } from "./api/index.js";
 import * as crmAccounts from "./crm_accounts/index.js";
+import * as crmPeople from "./crm_people/index.js";
 import * as billingPlans from "./billing_plans/index.js";
 import * as billingSubscriptions from "./billing_subscriptions/index.js";
 
@@ -35,6 +36,24 @@ export const registerTools = (server: McpServer) => {
         params,
         "register_account"
       );
+    }
+  );
+
+  server.tool(
+    "get_people",
+    `Get people from Outseta. ${PAGINATION_DESCRIPTION} ${FILTERING_DESCRIPTION}`,
+    queryParamsSchema.shape,
+    async (params: QueryParams) => {
+      return toolResponse(crmPeople.getPeople, params, "get_people");
+    }
+  );
+
+  server.tool(
+    "create_person",
+    `Create a person in Outseta. People can be connected to accounts or exist independently (e.g., for email lists or support tickets). ${CONFIRMATION_DESCRIPTION}`,
+    crmPeople.createPersonSchema.shape,
+    async (params: crmPeople.CreatePersonParams) => {
+      return toolResponse(crmPeople.createPerson, params, "create_person");
     }
   );
 
