@@ -18,7 +18,7 @@ export const filterSchema = z.object({
 });
 
 export const pageSchema = z.number().min(0);
-export const perPageSchema = z.number().min(1).max(25);
+export const perPageSchema = z.number().min(1).max(100);
 
 export const queryParamsSchema = z.object({
   q: z
@@ -37,15 +37,26 @@ export const queryParamsSchema = z.object({
     .optional()
     .describe("Array of filter conditions to apply."),
   page: pageSchema
-    .default(0)
+    .optional()
     .describe(
       "The page number to start from (0-based). Use page=1 for the second page, page=2 for the third page, etc."
     ),
-  perPage: perPageSchema
+  perPage: perPageSchema.optional().describe(
+    `The number of results to return per page. Use with page for pagination.
+       When perPage > 25, fields automatically defaults to *, if fields is not explicitly set: removing immediate child objects.`
+  ),
+  fields: z
+    .string()
     .optional()
-    .default(25)
     .describe(
-      "The number of results to return per page. Maximum value is 25. Use with page for pagination, keep the same value for all pages."
+      `The fields to return.\n\n
+         Default includes main object and immediate child objects.\n\n
+         Use * for only root fields (max page size 100),
+         comma-separated fields like 'Uid,Name' for minimal data (max page size 100),
+         specific paths like 'Uid,CurrentSubscription.Plan.*', '*,PeopleAccount.*,PeopleAccount.Person.*' for nested data (max page size 25),
+         and include 'LifeTimeValue' for computed values (max page size 25).\n\n
+         Unsure of page the max page size, check the response in the first response.\n\n
+         Unsure of possible fields, do a request with perPage=1 to see the possible fields.`
     ),
 });
 

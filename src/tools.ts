@@ -17,7 +17,8 @@ export const FILTERING_DESCRIPTION =
 export const registerTools = (server: McpServer) => {
   server.tool(
     "get_accounts",
-    `Get accounts from Outseta. ${PAGINATION_DESCRIPTION} ${FILTERING_DESCRIPTION}`,
+    `Get accounts from Outseta. Remember to use ask specifically for LifeTimeValue if needed.
+     ${PAGINATION_DESCRIPTION} ${FILTERING_DESCRIPTION}`,
     queryParamsSchema.shape,
     async (params: QueryParams) => {
       return toolResponse(crmAccounts.getAccounts, params, "get_accounts");
