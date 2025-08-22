@@ -1,16 +1,35 @@
 # Outseta Admin MCP Server
 
-A Model Context Protocol (MCP) server for interacting with the Outseta platform, providing access to billing plans, plan families, accounts, and more.
+A Model Context Protocol (MCP) server for interacting with your [Outseta](https://outseta.com) account. This server provides AI assistants with the ability to manage your Outseta account through natural language commands.
 
-## Features
+## What You Can Do
 
-- **Billing Management**: Get, create, and manage billing plans and plan families
-- **Account Management**: Retrieve and manage customer accounts
-- **Advanced Filtering**: Support for complex filters with operators (gt, gte, lt, lte, ne, isnull)
-- **Pagination**: Built-in pagination support for all list operations
-- **Sorting**: Configurable sorting by any field in ascending or descending order
-- **TypeScript Support**: Comprehensive type definitions and schema validation
-- **Error Handling**: Robust error handling with detailed error messages
+This MCP server enables AI assistants to help you with common Outseta administrative tasks:
+
+### Account & Customer Management
+
+- **Register new accounts**: "Register a new account for John Doe with email john@example.com on the Pro plan"
+- **Find customer information**: "Show me all accounts created this month"
+- **Update customer details**: "Change the billing plan for account ABC123 to the Enterprise plan"
+- **Preview subscription changes**: "What would happen if I upgrade account XYZ to annual billing?"
+
+### Billing & Subscription Management
+
+- **Manage billing plans**: "Create a new monthly plan called 'Starter' for $29/month"
+- **Handle subscription changes**: "Upgrade customer ABC to the Pro plan starting immediately"
+- **Plan family organization**: "Create a new plan family called 'Business Plans'"
+- **Monitor billing**: "Show me all accounts with failed payments this week"
+
+### People & Contact Management
+
+- **Add team members**: "Add Sarah Johnson as a team member to the Acme Corp account"
+- **Update contact info**: "Update the primary contact for account XYZ"
+- **Manage relationships**: "Show me all people associated with the Enterprise accounts"
+
+### Email List Management
+
+- **Manage subscribers**: "Add john@example.com to the Prodct Updates"
+- **Bulk operations**: "Show me all email lists and their subscriber counts"
 
 ## Installation
 
@@ -25,14 +44,6 @@ npm install
 ```bash
 npm run build
 ```
-
-## Configuration
-
-Set the following environment variables:
-
-- `OUTSETA_SUBDOMAIN` - Your Outseta subdomain (e.g., "yourcompany")
-- `OUTSETA_API_KEY` - Your Outseta API key
-- `OUTSETA_API_SECRET` - Your Outseta API secret
 
 ## Usage
 
@@ -52,141 +63,63 @@ Run in development mode with auto-reload:
 npm run dev
 ```
 
-## Available Tools
+## Integration with AI Assistants
 
-### Plans Management
+This server is designed to work with MCP-compatible AI assistants. Once connected, you can use natural language to perform Outseta administrative tasks like:
 
-#### get_plans
+- "Register a new customer for the Pro plan"
+- "Show me accounts that haven't paid this month"
+- "Create a new email list for product announcements"
+- "Upgrade all Starter plan customers to Pro"
+- "Add the new hire to our team account"
 
-Get billing plans from Outseta with pagination, filtering, and sorting.
+The AI assistant will use the appropriate tools automatically based on your requests, handling parameter validation, error checking, and confirmation prompts for destructive operations.
 
-**Parameters:**
+### Setting up with Cursor
 
-- `page` (number, optional): Page number (0-based, default: 0)
-- `perPage` (number, optional): Results per page (1-25, default: 25)
-- `orderBy` (string, optional): Field to order by
-- `orderDirection` ("asc" | "desc", optional): Sort direction
-- `filters` (array, optional): Array of filter conditions
+1. Make sure the MCP server is built
+2. In Cursor, open your settings (Cmd/Ctrl + ,)
+3. Search for "MCP" or go to Extensions > MCP
+4. Add a new MCP server configuration (replace the path with the path to the MCP server):
+   ```json
+   {
+     "name": "outseta-admin",
+     "command": "node",
+     "args": ["path/to/your/outseta-admin-mcp-server/build/index.js"],
+     "env": {
+       "OUTSETA_SUBDOMAIN": "your-subdomain",
+       "OUTSETA_API_KEY": "your-api-key",
+       "OUTSETA_API_SECRET": "your-api-secret"
+     }
+   }
+   ```
+5. Save the configuration and restart Cursor
+6. The Outseta tools will now be available in Cursor's AI assistant
 
-**Filter format:**
+### Setting up with Claude Desktop
 
-```json
-{
-  "field": "CreatedAt",
-  "operator": "gte",
-  "value": "2024-01-01"
-}
-```
-
-**Available operators:** `gt`, `gte`, `lt`, `lte`, `ne`, `isnull`
-
-#### get_plan_families
-
-Get all plan families from Outseta.
-
-**Parameters:** None
-
-#### create_plan
-
-Create a new billing plan.
-
-**Parameters:**
-
-- `name` (string): Plan name
-- `planFamilyUid` (string): UID of the plan family
-- `isActive` (boolean): Whether the plan is active
-- `trialPeriodDays` (number): Number of trial days
-- `accountRegistrationMode` ("Individual" | "Team"): Registration mode
-- `rates` (object): Plan rates (monthly, quarterly, yearly, or one-time)
-
-**Rate examples:**
-
-```json
-// Recurring plan
-{
-  "monthlyRate": 29,
-  "quarterlyRate": 87,
-  "yearlyRate": 290
-}
-
-// One-time plan
-{
-  "oneTimeRate": 99
-}
-```
-
-### Account Management
-
-#### get_accounts
-
-Get customer accounts from Outseta with pagination, filtering, and sorting.
-
-**Parameters:**
-
-- `page` (number, optional): Page number (0-based, default: 0)
-- `perPage` (number, optional): Results per page (1-25, default: 25)
-- `orderBy` (string, optional): Field to order by
-- `orderDirection` ("asc" | "desc", optional): Sort direction
-- `filters` (array, optional): Array of filter conditions
-
-## Response Format
-
-All tools return responses in a consistent format:
-
-```json
-{
-  "success": true,
-  "data": {
-    "items": [...],
-    "metadata": {
-      "total": 100,
-      "page": 0,
-      "perPage": 25
-    }
-  }
-}
-```
-
-Error responses:
-
-```json
-{
-  "success": false,
-  "error": "Error message",
-  "details": "Additional error details"
-}
-```
-
-## Development
-
-The project is structured as follows:
-
-```
-src/
-├── index.ts          # Main MCP server setup
-├── api.ts            # Outseta API client with authentication
-├── schemas/
-│   └── common.ts     # Shared schemas for pagination, filtering, etc.
-└── tools/
-    ├── index.ts      # Tool registration
-    ├── plans.ts      # Billing plans tools
-    ├── accounts.ts   # Account management tools
-    └── _utils.ts     # Utility functions for responses
-```
-
-### Key Components
-
-- **OutsetaApi**: Handles authentication and API communication with Outseta
-- **Tools**: Individual tool implementations for different Outseta resources
-- **Schemas**: Zod-based validation schemas for consistent parameter handling
-- **Pagination**: Automatic conversion between MCP pagination and Outseta's offset/limit system
-- **Filtering**: Advanced filtering system supporting multiple operators
-
-### Scripts
-
-- `npm run build` - Build the TypeScript project
-- `npm start` - Run the built server
-- `npm run dev` - Development mode with auto-reload
+1. Make sure the MCP server is built
+2. Open Claude Desktop's configuration file:
+   - **macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
+   - **Windows**: `%APPDATA%\Claude\claude_desktop_config.json`
+3. Add the MCP server configuration (replace the path with the path to the MCP server):
+   ```json
+   {
+     "mcpServers": {
+       "outseta-admin": {
+         "command": "node",
+         "args": ["path/to/your/outseta-admin-mcp-server/build/index.js"],
+         "env": {
+           "OUTSETA_SUBDOMAIN": "your-subdomain",
+           "OUTSETA_API_KEY": "your-api-key",
+           "OUTSETA_API_SECRET": "your-api-secret"
+         }
+       }
+     }
+   }
+   ```
+4. Save the configuration and restart Claude Desktop
+5. The Outseta tools will now be available in Claude Desktop
 
 ## License
 
