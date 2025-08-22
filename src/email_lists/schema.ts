@@ -34,4 +34,11 @@ export const createEmailListSchema = z.object({
     ),
 });
 
+export const getEmailListSubscribersSchema = z.object({
+  listUid: z.string().describe("The unique identifier of the email list"),
+});
+
 export type CreateEmailListParams = z.infer<typeof createEmailListSchema>;
+export type GetEmailListSubscribersParams = z.infer<
+  typeof getEmailListSubscribersSchema
+>;

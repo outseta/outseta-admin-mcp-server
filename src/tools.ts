@@ -162,6 +162,19 @@ export const registerTools = (server: McpServer) => {
       );
     }
   );
+
+  server.tool(
+    "get_email_list_subscribers",
+    `Get all subscribers to a specific email list from Outseta.`,
+    emailLists.getEmailListSubscribersSchema.shape,
+    async (params: emailLists.GetEmailListSubscribersParams) => {
+      return toolResponse(
+        emailLists.getEmailListSubscribers,
+        params,
+        "get_email_list_subscribers"
+      );
+    }
+  );
 };
 
 const toolResponse = async (

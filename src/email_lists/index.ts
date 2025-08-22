@@ -1,7 +1,17 @@
 import outseta, { PaginatedResults, QueryParams } from "../api/index.js";
-import { createEmailListSchema, CreateEmailListParams } from "./schema.js";
+import {
+  createEmailListSchema,
+  CreateEmailListParams,
+  getEmailListSubscribersSchema,
+  GetEmailListSubscribersParams,
+} from "./schema.js";
 
-export { createEmailListSchema, CreateEmailListParams };
+export {
+  createEmailListSchema,
+  CreateEmailListParams,
+  getEmailListSubscribersSchema,
+  GetEmailListSubscribersParams,
+};
 
 export const getEmailLists = async (params: QueryParams) => {
   return await outseta.get<PaginatedResults<any>>("/email/lists", {
@@ -26,4 +36,12 @@ export const createEmailList = async (params: CreateEmailListParams) => {
   }
 
   return await outseta.post("/email/lists", outsetaParams);
+};
+
+export const getEmailListSubscribers = async (
+  params: GetEmailListSubscribersParams
+) => {
+  return await outseta.get<PaginatedResults<any>>(
+    `/email/lists/${params.listUid}/subscriptions`
+  );
 };
