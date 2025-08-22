@@ -38,7 +38,22 @@ export const getEmailListSubscribersSchema = z.object({
   listUid: z.string().describe("The unique identifier of the email list"),
 });
 
+export const subscribeToEmailListSchema = z.object({
+  listUid: z.string().describe("The unique identifier of the email list"),
+  personUid: z
+    .string()
+    .describe("The unique identifier of the person to subscribe"),
+  sendWelcomeEmail: z
+    .boolean()
+    .optional()
+    .default(false)
+    .describe("Whether to send a welcome email to the subscriber"),
+});
+
 export type CreateEmailListParams = z.infer<typeof createEmailListSchema>;
 export type GetEmailListSubscribersParams = z.infer<
   typeof getEmailListSubscribersSchema
+>;
+export type SubscribeToEmailListParams = z.infer<
+  typeof subscribeToEmailListSchema
 >;

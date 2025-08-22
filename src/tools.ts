@@ -175,6 +175,19 @@ export const registerTools = (server: McpServer) => {
       );
     }
   );
+
+  server.tool(
+    "subscribe_to_email_list",
+    `Subscribe an existing person to an email list in Outseta. ${CONFIRMATION_DESCRIPTION}`,
+    emailLists.subscribeToEmailListSchema.shape,
+    async (params: emailLists.SubscribeToEmailListParams) => {
+      return toolResponse(
+        emailLists.subscribeToEmailList,
+        params,
+        "subscribe_to_email_list"
+      );
+    }
+  );
 };
 
 const toolResponse = async (

@@ -4,6 +4,8 @@ import {
   CreateEmailListParams,
   getEmailListSubscribersSchema,
   GetEmailListSubscribersParams,
+  subscribeToEmailListSchema,
+  SubscribeToEmailListParams,
 } from "./schema.js";
 
 export {
@@ -11,6 +13,8 @@ export {
   CreateEmailListParams,
   getEmailListSubscribersSchema,
   GetEmailListSubscribersParams,
+  subscribeToEmailListSchema,
+  SubscribeToEmailListParams,
 };
 
 export const getEmailLists = async (params: QueryParams) => {
@@ -43,5 +47,21 @@ export const getEmailListSubscribers = async (
 ) => {
   return await outseta.get<PaginatedResults<any>>(
     `/email/lists/${params.listUid}/subscriptions`
+  );
+};
+
+export const subscribeToEmailList = async (
+  params: SubscribeToEmailListParams
+) => {
+  // Transform params to match Outseta API format (PascalCase)
+  const outsetaParams = {
+    EmailList: { Uid: params.listUid },
+    Person: { Uid: params.personUid },
+    SendWelcomeEmail: params.sendWelcomeEmail,
+  };
+
+  return await outseta.post(
+    `/email/lists/${params.listUid}/subscriptions`,
+    outsetaParams
   );
 };
