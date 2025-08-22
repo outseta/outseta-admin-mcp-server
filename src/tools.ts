@@ -25,6 +25,19 @@ export const registerTools = (server: McpServer) => {
   );
 
   server.tool(
+    "register_account",
+    `Register a new account (person + account + subscription) in Outseta. ${CONFIRMATION_DESCRIPTION}`,
+    crmAccounts.registerAccountSchema.shape,
+    async (params: crmAccounts.RegisterAccountParams) => {
+      return toolResponse(
+        crmAccounts.registerAccount,
+        params,
+        "register_account"
+      );
+    }
+  );
+
+  server.tool(
     "get_plans",
     `Get plans from Outseta. ${PAGINATION_DESCRIPTION} ${FILTERING_DESCRIPTION}`,
     queryParamsSchema.shape,
