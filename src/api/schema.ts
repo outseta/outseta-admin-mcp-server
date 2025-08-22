@@ -21,6 +21,12 @@ export const pageSchema = z.number().min(0);
 export const perPageSchema = z.number().min(1).max(25);
 
 export const queryParamsSchema = z.object({
+  q: z
+    .string()
+    .optional()
+    .describe(
+      "Search term to filter results by. Searches across relevant fields."
+    ),
   orderBy: z.string().optional().describe("The field to order by"),
   orderDirection: z
     .enum(["asc", "desc"])
@@ -36,6 +42,7 @@ export const queryParamsSchema = z.object({
       "The page number to start from (0-based). Use page=1 for the second page, page=2 for the third page, etc."
     ),
   perPage: perPageSchema
+    .optional()
     .default(25)
     .describe(
       "The number of results to return per page. Maximum value is 25. Use with page for pagination, keep the same value for all pages."
