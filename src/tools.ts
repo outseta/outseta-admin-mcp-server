@@ -114,15 +114,17 @@ const toolResponse = async (
       ],
     };
   } catch (error: any) {
-    const errorMessage = error instanceof Error ? error.message : String(error);
+    // If there is a response data, it means the error is from the API
+    // So we can return the error message from the API
+    const errorData = error.response?.data ?? { message: error.message };
     return {
       structuredContent: {
-        error: errorMessage,
+        error: errorData,
       },
       content: [
         {
           type: "text" as const,
-          text: `Error ${operation}: ${errorMessage}`,
+          text: `Error ${operation}:\n\n${JSON.stringify(errorData, null, 2)}`,
         },
       ],
     };
