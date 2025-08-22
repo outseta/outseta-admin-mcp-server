@@ -35,3 +35,24 @@ export const registerAccountSchema = z.object({
       }
     }),
 });
+
+export const addPersonToAccountSchema = z.object({
+  accountUid: z
+    .string()
+    .describe("The UID of the account to add the person to"),
+  personUid: z.string().describe("The UID of the person to add to the account"),
+  isPrimary: z
+    .boolean()
+    .optional()
+    .default(false)
+    .describe(
+      "Whether this person should be the primary contact for the account"
+    ),
+  sendWelcomeEmail: z
+    .boolean()
+    .optional()
+    .default(false)
+    .describe("Whether to send a welcome email to the person"),
+});
+
+export type AddPersonToAccountParams = z.infer<typeof addPersonToAccountSchema>;

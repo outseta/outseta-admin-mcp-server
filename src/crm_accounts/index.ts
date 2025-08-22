@@ -1,9 +1,14 @@
 import { z } from "zod";
 import outseta, { PaginatedResults, QueryParams } from "../api/index.js";
-import { registerAccountSchema } from "./schema.js";
+import {
+  registerAccountSchema,
+  addPersonToAccountSchema,
+  AddPersonToAccountParams,
+} from "./schema.js";
 
-export { registerAccountSchema };
+export { registerAccountSchema, addPersonToAccountSchema };
 export type RegisterAccountParams = z.infer<typeof registerAccountSchema>;
+export type { AddPersonToAccountParams };
 
 export const getAccounts = async (params: QueryParams) => {
   return await outseta.get<PaginatedResults<any>>("/crm/accounts", {
@@ -36,4 +41,27 @@ export const registerAccount = async (params: RegisterAccountParams) => {
   };
 
   return await outseta.post("/crm/registrations", outsetaParams);
+};
+
+export const addPersonToAccount = async (params: AddPersonToAccountParams) => {
+  // Transform params to match Outseta API format (PascalCase)
+  const outsetaParams = {
+    Account: {
+      Uid: params.accountUid,
+    },
+    Person: {
+      Uid: params.personUid,
+    },
+    IsPrimary: params.isPrimary,
+  };
+
+  return await outseta.post(
+    `/crm/accounts/${params.accountUid}/memberships`,
+    outsetaParams,
+    {
+      params: {
+        sendWelcomeEmail: params.sendWelcomeEmail,
+      },
+    }
+  );
 };

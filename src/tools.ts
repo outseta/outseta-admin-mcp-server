@@ -58,6 +58,19 @@ export const registerTools = (server: McpServer) => {
   );
 
   server.tool(
+    "add_person_to_account",
+    `Add an existing person to an account in Outseta. ${CONFIRMATION_DESCRIPTION}`,
+    crmAccounts.addPersonToAccountSchema.shape,
+    async (params: crmAccounts.AddPersonToAccountParams) => {
+      return toolResponse(
+        crmAccounts.addPersonToAccount,
+        params,
+        "add_person_to_account"
+      );
+    }
+  );
+
+  server.tool(
     "get_plans",
     `Get plans from Outseta. ${PAGINATION_DESCRIPTION} ${FILTERING_DESCRIPTION}`,
     queryParamsSchema.shape,
