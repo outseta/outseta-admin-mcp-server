@@ -53,7 +53,7 @@ export const queryParamsSchema = z.object({
          Default includes main object and immediate child objects.\n\n
          Use * for only root fields (max page size 100),
          comma-separated fields like 'Uid,Name' for minimal data (max page size 100),
-         specific paths like 'Uid,CurrentSubscription.Plan.*', '*,PeopleAccount.*,PeopleAccount.Person.*' for nested data (max page size 25),
+         specific paths like 'Uid,CurrentSubscription.Plan.*', '*,PersonAccount.*,PersonAccount.Person.*' for nested data (max page size 25),
          and include 'LifeTimeValue' for computed values (max page size 25).\n\n
          Unsure of page the max page size, check the response in the first response.\n\n
          Unsure of possible fields, do a request with perPage=1 to see the possible fields.`
