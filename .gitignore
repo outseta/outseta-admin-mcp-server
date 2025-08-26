@@ -50,3 +50,6 @@ jspm_packages/
 
 # Optional eslint cache
 .eslintcache
+
+# npm pack tarballs
+*.tgz
