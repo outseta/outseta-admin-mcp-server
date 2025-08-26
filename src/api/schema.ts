@@ -42,21 +42,23 @@ export const queryParamsSchema = z.object({
       "The page number to start from (0-based). Use page=1 for the second page, page=2 for the third page, etc."
     ),
   perPage: perPageSchema.optional().describe(
-    `The number of results to return per page. Use with page for pagination.
-       When perPage > 25, fields automatically defaults to *, if fields is not explicitly set: removing immediate child objects.`
+    `The number of results to return per page. Use with page for pagination.\n
+    Do a request with no page=0, perPage=undefined to see the max page size for the configured fields.`
   ),
   fields: z
     .string()
     .optional()
+    .default("*.*")
     .describe(
-      `The fields to return.\n\n
-         Default includes main object and immediate child objects.\n\n
-         Use * for only root fields (max page size 100),
-         comma-separated fields like 'Uid,Name' for minimal data (max page size 100),
-         specific paths like 'Uid,CurrentSubscription.Plan.*', '*,PersonAccount.*,PersonAccount.Person.*' for nested data (max page size 25),
-         and include 'LifeTimeValue' for computed values (max page size 25).\n\n
-         Unsure of page the max page size, check the response in the first response.\n\n
-         Unsure of possible fields, do a request with perPage=1 to see the possible fields.`
+      `The fields to include in the response:\n\n
+         - Main object's root fields - '*' (max page size 100)\n
+         - Minimal data - comma-separated list of fields like 'Uid,Name' (max page size 100)\n
+         - Nested data - specific paths like 'Uid,CurrentSubscription.Plan.*', '*,PersonAccount.*,PersonAccount.Person.*' (max page size 25)\n
+         - Computed values - the field must be explicitly set '*,LifeTimeValue' (max page size 25)\n
+         - Default, includes main object and immediate child objects - *.* (max page size 25)\n\n
+
+      Do a request with only page=0, perPage=10 to see the possible fields.\n
+      Do a request with no page=0, perPage=undefined to see the max page size for the configured fields.`
     ),
 });
 
