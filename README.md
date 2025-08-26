@@ -2,90 +2,138 @@
 
 A Model Context Protocol (MCP) server for interacting with your [Outseta](https://outseta.com) account. This server provides AI assistants with the ability to manage your Outseta account through natural language commands.
 
+- [What You Can Do](#what-you-can-do)
+  - [Account & People](#account--people)
+  - [Billing Plans](#billing-plans)
+  - [Subscriptions](#subscriptions)
+  - [Email Lists](#email-lists)
+- [Integration with AI Assistants](#integration-with-ai-assistants)
+  - [Prerequisites & Requirements](#prerequisites--requirements)
+  - [Getting Your API Credentials](#getting-your-api-credentials)
+  - [Installation](#installation)
+  - [Setting up with Cursor](#setting-up-with-cursor)
+  - [Setting up with Claude Desktop](#setting-up-with-claude-desktop)
+- [Security Considerations](#security-considerations)
+- [Contributing](#contributing)
+- [License](#license)
+
 ## What You Can Do
 
 This MCP server enables AI assistants to help you with common Outseta administrative tasks:
 
-### Account & Customer Management
+### Account & People
 
-- **Register new accounts**: "Register a new account for John Doe with email john@example.com on the Pro plan"
-- **Find customer information**: "Show me all accounts created this month"
-- **Update customer details**: "Change the billing plan for account ABC123 to the Enterprise plan"
-- **Preview subscription changes**: "What would happen if I upgrade account XYZ to annual billing?"
+- **Manage accounts & people**:
 
-### Billing & Subscription Management
+  - "Register a new account for Acme Corp"
+  - "Add lisa@example.com to the Basic plan"
+  - "Create a new person 'Jane Doe' (jane@example.com)"
+  - "Add Sarah Johnson as a team member to the Acme Corp"
+  - "Update the primary contact for Acme Corp"
 
-- **Manage billing plans**: "Create a new monthly plan called 'Starter' for $29/month"
-- **Handle subscription changes**: "Upgrade customer ABC to the Pro plan starting immediately"
-- **Plan family organization**: "Create a new plan family called 'Business Plans'"
-- **Monitor billing**: "Show me all accounts with failed payments this week"
+- **Explore accounts & people**:
 
-### People & Contact Management
+  - "How many people are associated with Acme Corp?"
+  - "List all accounts created this month"
+  - "Who has been added this week?"
+  - "What accounts are trialing at the moment?"
 
-- **Add team members**: "Add Sarah Johnson as a team member to the Acme Corp account"
-- **Update contact info**: "Update the primary contact for account XYZ"
-- **Manage relationships**: "Show me all people associated with the Enterprise accounts"
+### Billing Plans
 
-### Email List Management
+- **Manage billing plans & plan families**:
 
-- **Manage subscribers**: "Add john@example.com to the Prodct Updates"
-- **Bulk operations**: "Show me all email lists and their subscriber counts"
+  - "Create a new monthly plan called 'Starter' for $29/month, $199/year"
+  - "Add a 'Pro' plan"
+  - "Help me create plans for a course business"
+  - "Let's add SaaS style plans"
+  - "Create a plan family for my course business"
+  - "Set up plan families for different product lines"
 
-## Installation
+- **Explore billing plans & plan families**:
 
-1. Install dependencies:
+  - "What are my paid plans?"
+  - "What is the price of my Pro plan?"
+  - "List all plan families"
+  - "Show me all plans in the 'SaaS' plan family"
 
-```bash
-npm install
-```
+### Subscriptions
 
-2. Build the project:
+- **Preview & change subscriptions**:
 
-```bash
-npm run build
-```
+  - "What would happen if I upgrade account Acme Corp to annual billing?"
+  - "Preview the cost changes if I switch Acme Corp to the Pro plan"
+  - "Upgrade Acme Corp to the Pro plan starting immediately"
 
-## Usage
+- **Explore subscriptions**:
 
-### As a standalone MCP server
+  - "Show me all active subscriptions"
+  - "Show me failed payments this week"
+  - "List accounts that are currently on trials"
 
-Run the server:
+### Email Lists
 
-```bash
-npm start
-```
+- **Manage email lists & subscriptions**:
 
-### Development mode
+  - "I need a newsletter"
+  - "Let's add a Product Updates list with double opt-in"
+  - "Add john@example.com to Product Updates"
+  - "Create an internal list for team announcements"
 
-Run in development mode with auto-reload:
+- **Explore email lists & subscribers**:
 
-```bash
-npm run dev
-```
+  - "What email lists do I have"
+  - "Who's subscribed to Product Updates?"
+  - "List all subscribers to my newsletter"
+  - "How many people are on each of my email lists?"
 
 ## Integration with AI Assistants
 
-This server is designed to work with MCP-compatible AI assistants. Once connected, you can use natural language to perform Outseta administrative tasks like:
+This server integrates with MCP-compatible AI assistants to enable natural language management of your Outseta account. The AI assistant will automatically select the appropriate tools based on your requests, handle parameter validation and error checking, and prompt for confirmation before performing destructive operations.
 
-- "Register a new customer for the Pro plan"
-- "Show me accounts that haven't paid this month"
-- "Create a new email list for product announcements"
-- "Upgrade all Starter plan customers to Pro"
-- "Add the new hire to our team account"
+### Prerequisites & Requirements
 
-The AI assistant will use the appropriate tools automatically based on your requests, handling parameter validation, error checking, and confirmation prompts for destructive operations.
+Before setting up the MCP server, ensure you have:
+
+- **Node.js** (version 18 or higher)
+- **An active Outseta account** with admin access
+- **Outseta API credentials** (API key and secret)
+- **MCP-compatible AI assistant** (Cursor, Claude Desktop, or similar)
+
+### Getting Your API Credentials
+
+To use this MCP server, you'll need to obtain API credentials from your Outseta account:
+
+1. Log into your Outseta account
+2. Go to **Settings > Integrations > API Keys**
+3. Click **Add API Keys**
+4. Create a new API key with appropriate permissions
+5. Note down your:
+   - **Subdomain** (e.g., if your Outseta URL is `yourcompany.outseta.com`, your subdomain is `yourcompany`)
+   - **API Key**
+   - **API Secret**
+
+**Important**: Keep these credentials secure
+
+### Installation
+
+Install and run directly with npx (no local installation required):
+
+```bash
+npx @outseta/admin-mcp-server
+```
+
+This will automatically download and run the latest version.
 
 ### Setting up with Cursor
 
-1. Make sure the MCP server is built
-2. In Cursor, open your settings (Cmd/Ctrl + ,)
-3. Search for "MCP" or go to Extensions > MCP
-4. Add a new MCP server configuration (replace the path with the path to the MCP server):
+1. In Cursor, open your settings (Cmd/Ctrl + ,)
+2. Search for "MCP" or go to Extensions > MCP
+3. Add a new MCP server configuration:
    ```json
    {
      "name": "outseta-admin",
-     "command": "node",
-     "args": ["path/to/your/outseta-admin-mcp-server/build/index.js"],
+     "command": "npx",
+     "args": ["@outseta/admin-mcp-server"],
      "env": {
        "OUTSETA_SUBDOMAIN": "your-subdomain",
        "OUTSETA_API_KEY": "your-api-key",
@@ -93,22 +141,21 @@ The AI assistant will use the appropriate tools automatically based on your requ
      }
    }
    ```
-5. Save the configuration and restart Cursor
-6. The Outseta tools will now be available in Cursor's AI assistant
+4. Save the configuration and restart Cursor
+5. The Outseta tools will now be available in Cursor's AI assistant
 
 ### Setting up with Claude Desktop
 
-1. Make sure the MCP server is built
-2. Open Claude Desktop's configuration file:
+1. Open Claude Desktop's configuration file:
    - **macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
    - **Windows**: `%APPDATA%\Claude\claude_desktop_config.json`
-3. Add the MCP server configuration (replace the path with the path to the MCP server):
+2. Add the MCP server configuration:
    ```json
    {
      "mcpServers": {
        "outseta-admin": {
-         "command": "node",
-         "args": ["path/to/your/outseta-admin-mcp-server/build/index.js"],
+         "command": "npx",
+         "args": ["@outseta/admin-mcp-server"],
          "env": {
            "OUTSETA_SUBDOMAIN": "your-subdomain",
            "OUTSETA_API_KEY": "your-api-key",
@@ -118,8 +165,36 @@ The AI assistant will use the appropriate tools automatically based on your requ
      }
    }
    ```
-4. Save the configuration and restart Claude Desktop
-5. The Outseta tools will now be available in Claude Desktop
+3. Save the configuration and restart Claude Desktop
+4. The Outseta tools will now be available in Claude Desktop
+
+## Security Considerations
+
+When using this MCP server, keep the following security practices in mind:
+
+### API Credential Security
+
+- **Never commit API credentials** to version control systems
+- Store credentials securely using environment variables
+- Regularly rotate your API keys as part of good security hygiene
+- Use the minimum required permissions for your API keys
+
+### Data Privacy
+
+- The MCP server only accesses data you explicitly request through AI commands
+- All API calls are made directly from your local environment to Outseta
+- No data is stored persistently by the MCP server
+- Review AI commands before confirming destructive operations
+
+### Access Control
+
+- Only install this server in trusted environments
+- Be cautious when sharing MCP configurations that include credentials
+- Create keys specifically for the MCP server
+
+## Contributing
+
+Interested in contributing? See [CONTRIBUTING.md](CONTRIBUTING.md) for development setup and guidelines.
 
 ## License
 
