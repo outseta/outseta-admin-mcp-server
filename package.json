@@ -1,6 +1,6 @@
 {
   "name": "@outseta/admin-mcp-server",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Model Context Protocol (MCP) server for Outseta administration - enables AI assistants to manage your Outseta account through natural language",
   "main": "build/index.js",
   "type": "module",
