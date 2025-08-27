@@ -10,10 +10,12 @@ A Model Context Protocol (MCP) server for interacting with your [Outseta](https:
 - [Integration with AI Assistants](#integration-with-ai-assistants)
   - [Prerequisites & Requirements](#prerequisites--requirements)
   - [Getting Your API Credentials](#getting-your-api-credentials)
-  - [Installation](#installation)
-  - [Setting up with Cursor](#setting-up-with-cursor)
-  - [Setting up with Claude Desktop](#setting-up-with-claude-desktop)
+  - [Using the MCP Server with Cursor](#using-the-mcp-server-with-cursor)
+  - [Using the MCP Server with Claude Desktop](#using-the-mcp-server-with-claude-desktop)
 - [Security Considerations](#security-considerations)
+  - [API Credential Security](#api-credential-security)
+  - [Data Privacy](#data-privacy)
+  - [Access Control](#access-control)
 - [Contributing](#contributing)
 - [License](#license)
 
@@ -114,17 +116,7 @@ To use this MCP server, you'll need to obtain API credentials from your Outseta 
 
 **Important**: Keep these credentials secure
 
-### Installation
-
-Install and run directly with npx (no local installation required):
-
-```bash
-npx @outseta/admin-mcp-server
-```
-
-This will automatically download and run the latest version.
-
-### Setting up with Cursor
+### Using the MCP Server with Cursor
 
 1. In Cursor, open your settings (Cmd/Ctrl + ,)
 2. Search for "MCP" or go to Extensions > MCP
@@ -133,7 +125,7 @@ This will automatically download and run the latest version.
    {
      "name": "outseta-admin",
      "command": "npx",
-     "args": ["@outseta/admin-mcp-server"],
+     "args": ["-y", "@outseta/admin-mcp-server"],
      "env": {
        "OUTSETA_SUBDOMAIN": "your-subdomain",
        "OUTSETA_API_KEY": "your-api-key",
@@ -144,7 +136,7 @@ This will automatically download and run the latest version.
 4. Save the configuration and restart Cursor
 5. The Outseta tools will now be available in Cursor's AI assistant
 
-### Setting up with Claude Desktop
+### Using the MCP Server with Claude Desktop
 
 1. Open Claude Desktop's configuration file:
    - **macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
@@ -155,7 +147,7 @@ This will automatically download and run the latest version.
      "mcpServers": {
        "outseta-admin": {
          "command": "npx",
-         "args": ["@outseta/admin-mcp-server"],
+         "args": ["-y", "@outseta/admin-mcp-server"],
          "env": {
            "OUTSETA_SUBDOMAIN": "your-subdomain",
            "OUTSETA_API_KEY": "your-api-key",
