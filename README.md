@@ -12,6 +12,7 @@ A Model Context Protocol (MCP) server for interacting with your [Outseta](https:
   - [Getting Your API Credentials](#getting-your-api-credentials)
   - [Using the MCP Server with Cursor](#using-the-mcp-server-with-cursor)
   - [Using the MCP Server with Claude Desktop](#using-the-mcp-server-with-claude-desktop)
+  - [Connecting to Multiple Outseta Accounts](#connecting-to-multiple-outseta-accounts)
 - [Security Considerations](#security-considerations)
   - [API Credential Security](#api-credential-security)
   - [Data Privacy](#data-privacy)
@@ -136,6 +137,33 @@ To use this MCP server, you'll need to obtain API credentials from your Outseta 
 4. Save the configuration and restart Cursor
 5. The Outseta tools will now be available in Cursor's AI assistant
 
+For multiple accounts in Cursor, you can add multiple server configurations in the MCP settings:
+
+```json
+[
+  {
+    "name": "outseta-production",
+    "command": "npx",
+    "args": ["-y", "@outseta/admin-mcp-server"],
+    "env": {
+      "OUTSETA_SUBDOMAIN": "yourcompany",
+      "OUTSETA_API_KEY": "your-production-api-key",
+      "OUTSETA_API_SECRET": "your-production-api-secret"
+    }
+  },
+  {
+    "name": "outseta-staging",
+    "command": "npx",
+    "args": ["-y", "@outseta/admin-mcp-server"],
+    "env": {
+      "OUTSETA_SUBDOMAIN": "yourcompany-staging",
+      "OUTSETA_API_KEY": "your-staging-api-key",
+      "OUTSETA_API_SECRET": "your-staging-api-secret"
+    }
+  }
+]
+```
+
 ### Using the MCP Server with Claude Desktop
 
 1. Open Claude Desktop's configuration file:
@@ -159,6 +187,53 @@ To use this MCP server, you'll need to obtain API credentials from your Outseta 
    ```
 3. Save the configuration and restart Claude Desktop
 4. The Outseta tools will now be available in Claude Desktop
+
+### Connecting to Multiple Outseta Accounts
+
+You can configure multiple instances of the MCP server to connect to different Outseta accounts simultaneously. This is useful when you manage multiple Outseta accounts or want to separate different environments (production, staging, etc.).
+
+#### Example Configuration for Multiple Accounts
+
+In Claude Desktop's configuration file, you can add multiple server entries:
+
+```json
+{
+  "mcpServers": {
+    "outseta-client-x: {
+      "command": "npx",
+      "args": ["-y", "@outseta/admin-mcp-server"],
+      "env": {
+        "OUTSETA_SUBDOMAIN": "client-x-subdomain",
+        "OUTSETA_API_KEY": "your-production-api-key",
+        "OUTSETA_API_SECRET": "your-production-api-secret"
+      }
+    },
+    "outseta-client-y": {
+      "command": "npx",
+      "args": ["-y", "@outseta/admin-mcp-server"],
+      "env": {
+        "OUTSETA_SUBDOMAIN": "client-y-subdomain",
+        "OUTSETA_API_KEY": "your-staging-api-key",
+        "OUTSETA_API_SECRET": "your-staging-api-secret"
+      }
+    }
+  }
+}
+```
+
+#### How Multiple Instances Work
+
+- Each instance runs independently with its own API credentials
+- You can identify which account you're working with by mentioning the distinct name, ie. "How many people are associated with client-x in Outseta?"
+- All commands will be executed against the account specified in that instance's configuration
+- The AI assistant will have access to tools from all configured instances
+
+#### Best Practices for Multiple Accounts
+
+- **Use descriptive names**: Choose server names that clearly identify the account or environment
+- **Separate credentials**: Use different API keys for each account for better security and access control
+- **Document your setup**: Keep track of which server connects to which account
+- **Test configurations**: Verify each instance works correctly after setup
 
 ## Security Considerations
 
