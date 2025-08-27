@@ -48,7 +48,7 @@ export const queryParamsSchema = z.object({
   fields: z
     .string()
     .optional()
-    .default("*.*")
+    .default("*,*.*")
     .describe(
       `The fields to include in the response:\n\n
          - Main object's root fields - '*' (max page size 100)\n
