@@ -45,7 +45,7 @@ outsetaAxiosInstance.interceptors.request.use((config) => {
       ...(perPage !== undefined && { limit: perPage.toString() }),
       // Transform orderBy with direction
       ...(orderBy && {
-        orderBy: `${orderBy}+${orderDirection?.toUpperCase() ?? "ASC"}`,
+        orderBy: `${orderBy} ${orderDirection?.toUpperCase() ?? "ASC"}`,
       }),
       // Transform filters if they exist
       ...filters.reduce(
