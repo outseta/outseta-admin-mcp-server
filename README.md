@@ -263,6 +263,10 @@ When using this MCP server, keep the following security practices in mind:
 
 Interested in contributing? See [CONTRIBUTING.md](CONTRIBUTING.md) for development setup and guidelines.
 
+## Support
+
+Please report your issues here: https://github.com/outseta/mcp-support/issues
+
 ## License
 
 ISC
